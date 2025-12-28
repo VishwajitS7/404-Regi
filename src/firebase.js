@@ -3,7 +3,7 @@ import { getFirestore } from "firebase/firestore";
 
 // 🔴 PASTE YOUR OWN CONFIG VALUES HERE
 const firebaseConfig = {
-  apiKey: "AIzaSyCahAMFt4RsFp1B3BM_wgoTmU6hAYHexT4",
+  apiKey: "",
   authDomain: "club-registration-a5631.firebaseapp.com",
   projectId: "club-registration-a5631",
   storageBucket: "club-registration-a5631.firebasestorage.app",
