@@ -17,10 +17,10 @@ export default function Button({
 
   const variants = {
     primary: {
-      background: 'linear-gradient(90deg, var(--accent-secondary), var(--accent-primary))',
+      background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary))', // Cyan -> Purple
       color: '#fff',
       border: 'none',
-      boxShadow: '0 4px 20px rgba(255, 158, 100, 0.4)'
+      boxShadow: '0 4px 20px rgba(0, 212, 255, 0.4)'
     },
     outline: {
       background: 'transparent',
@@ -39,7 +39,11 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      whileHover={!disabled ? { scale: 1.05, y: -2 } : {}}
+      whileHover={!disabled ? {
+        scale: 1.05,
+        y: -2,
+        boxShadow: "0 0 25px rgba(0, 212, 255, 0.6)"
+      } : {}}
       whileTap={!disabled ? { scale: 0.95 } : {}}
       style={{ ...variants[variant] }}
       className={`${baseStyles} ${className}`}

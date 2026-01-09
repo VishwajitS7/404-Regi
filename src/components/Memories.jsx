@@ -1,152 +1,224 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { Suspense, useEffect, useState } from "react";
+import HTMLFlipBook from "react-pageflip";
 
-export default function Memories() {
-    const [isOpen, setIsOpen] = useState(false);
+const Flipbook = () => {
+    const [dimensions, setDimensions] = useState(() => {
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 768) {
+                return { width: 250, height: 340 };
+            } else if (window.innerWidth < 1024) {
+                return { width: 300, height: 410 };
+            }
+        }
+        return { width: 350, height: 480 };
+    });
+    const [isClosed, setIsClosed] = useState(true);
+    
+    // Using images from the img folder
+    const images = [
+        "/img/4.jpeg",
+        "/img/49192829_10101658517075357_4372534237862035456_o.jpg",
+        "/img/Avatar_The_Way_of_Water_ScreenX_Poster.webp",
+        "/img/Avatar-poster.jpg",
+        "/img/d596631742582.5600fed0901f2.webp",
+        "/img/images (1).jpg",
+        "/img/images (2).jpg",
+        "/img/images (3).jpg",
+        "/img/images.jpg",
+        "/img/img_2101.jpg",
+        "/img/MV5BNTQ4Y2NiZDUtOGUzNC00ZjQ4LWFmNTQtYThmYWYxYzZiNDk2XkEyXkFqcGc@._V1_.jpg",
+        "/img/s-l500.jpg",
+    ];
 
+    const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth <= 768);
+
+    useEffect(() => {
+        setIsClosed(true);
+        
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 768;
+            setIsMobile(mobile);
+            
+            if (window.innerWidth < 768) {
+                setDimensions({ width: 250, height: 340 });
+            } else if (window.innerWidth < 1024) {
+                setDimensions({ width: 300, height: 410 });
+            } else {
+                setDimensions({ width: 350, height: 480 });
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    
     return (
-        <section className="section" style={{ perspective: "1500px", overflow: 'hidden' }}>
-            <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    style={{ textAlign: 'center', marginBottom: 60 }}
-                >
-                    <h2 style={{ fontSize: '2.5rem', marginBottom: 16 }}>Chapter 4: The Legacy</h2>
-                    <p style={{ maxWidth: 600, margin: '0 auto', color: 'var(--text-muted)' }}>
-                        Every year, we write a new story. Flip through the pages of our past events and see where it all began.
-                    </p>
-                </motion.div>
-
-                {/* 3D Book Container */}
-                <div
-                    style={{
-                        width: 380, // Aspect ratio of cover approx
-                        height: 520,
-                        position: 'relative',
-                        transformStyle: 'preserve-3d',
-                        cursor: 'pointer'
+        <section className="section" style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            width: '100%',
+            padding: '3rem 0'
+        }}>
+            <div className="container" style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                width: '100%'
+            }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    margin: '0 auto',
+                    marginLeft: !isMobile ? (isClosed ? '-15%' : '5%') : '0',
+                    transition: 'margin-left 0.5s ease-in-out',
+                    animation: 'floatBook 3s ease-in-out infinite',
+                    position: 'relative'
+                }}>
+                    {/* Floating Glow Effects */}
+                    <div style={{
+                        position: 'absolute',
+                        width: '200px',
+                        height: '200px',
+                        background: 'radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%)',
+                        filter: 'blur(30px)',
+                        borderRadius: '50%',
+                        top: '-50px',
+                        left: '-50px',
+                        zIndex: -1,
+                        pointerEvents: 'none',
+                        animation: 'floatGlow1 6s ease-in-out infinite'
+                    }}></div>
+                    <div style={{
+                        position: 'absolute',
+                        width: '150px',
+                        height: '150px',
+                        background: 'radial-gradient(circle, rgba(80, 200, 120, 0.25) 0%, transparent 70%)',
+                        filter: 'blur(25px)',
+                        borderRadius: '50%',
+                        bottom: '-30px',
+                        right: '-30px',
+                        zIndex: -1,
+                        pointerEvents: 'none',
+                        animation: 'floatGlow2 8s ease-in-out infinite'
+                    }}></div>
+                    <div style={{
+                        position: 'absolute',
+                        width: '180px',
+                        height: '180px',
+                        background: 'radial-gradient(circle, rgba(157, 0, 255, 0.2) 0%, transparent 70%)',
+                        filter: 'blur(35px)',
+                        borderRadius: '50%',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        zIndex: -1,
+                        pointerEvents: 'none',
+                        animation: 'floatGlow3 7s ease-in-out infinite'
+                    }}></div>
+                    {/* Main Glow Background */}
+                    <div style={{
+                        position: 'absolute',
+                        width: '140%',
+                        height: '140%',
+                        background: 'radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(80, 200, 120, 0.08) 40%, rgba(157, 0, 255, 0.06) 70%, transparent 100%)',
+                        filter: 'blur(50px)',
+                        zIndex: -2,
+                        pointerEvents: 'none'
+                    }}></div>
+                    <HTMLFlipBook
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    size="fixed"
+                    minWidth={dimensions.width}
+                    maxWidth={dimensions.width}
+                    minHeight={dimensions.height}
+                    maxHeight={dimensions.height}
+                    maxShadowOpacity={0.5}
+                    showCover={true}
+                    mobileScrollSupport={true}
+                    onFlip={(e) => {
+                        if (e.data === 0) {
+                            setIsClosed(true);
+                        } else {
+                            setIsClosed(false);
+                        }
                     }}
-                    onMouseEnter={() => setIsOpen(true)}
-                    onMouseLeave={() => setIsOpen(false)}
-                    onClick={() => setIsOpen(!isOpen)}
+                    startPage={0}
+                    id="flipbook"
+                    className="transition-all"
                 >
-                    {/* Back Cover (Static) */}
+                {/* Cover Page */}
+                <div className="w-full h-full" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
+                    <img
+                        src="/img/Cover.jpg"
+                        alt="cover"
+                        className="w-full h-full object-cover"
+                        style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            display: 'block',
+                            filter: 'brightness(0.9) contrast(1.1)',
+                            borderRadius: '12px'
+                        }}
+                    ></img>
                     <div style={{
                         position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        background: '#fef3c7', // Matching the inside page color
-                        borderRadius: '8px 16px 16px 8px',
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-                        transform: 'translateZ(-1px)' // Slightly behind
-                    }} />
-
-                    {/* Inside Right Page (Static Base) */}
-                    <div style={{
-                        position: 'absolute',
-                        width: '100%',
-                        height: '100%',
                         top: 0,
                         left: 0,
-                        borderRadius: '8px 16px 16px 8px',
-                        overflow: 'hidden',
-                        background: '#fef3c7',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        {/* We only show the RIGHT half of the inside image here */}
-                        <img
-                            src="/assets/memories-inside.png"
-                            alt="Memories Inside"
-                            style={{
-                                width: '200%', // Double width 
-                                maxWidth: 'none',
-                                height: '100%',
-                                objectFit: 'cover',
-                                transform: 'translateX(-25%)' // Shift to show right half better
-                            }}
-                        />
-                    </div>
-
-                    {/* Front Cover (Flippable) */}
-                    <motion.div
-                        animate={{ rotateY: isOpen ? -160 : 0 }}
-                        transition={{ duration: 0.8, type: "spring", stiffness: 50 }}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '101%', // Slight overlap
-                            height: '100%',
-                            transformOrigin: 'left center',
-                            transformStyle: 'preserve-3d',
-                            zIndex: 10,
-                            backfaceVisibility: 'hidden', // Hide when flipped to reveal "inside left"
-                        }}
-                    >
-                        <img
-                            src="/assets/memories-cover.png"
-                            alt="Memories Cover"
-                            style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'cover',
-                                borderRadius: '8px 16px 16px 8px',
-                                boxShadow: '-5px 0 15px rgba(0,0,0,0.2)'
-                            }}
-                        />
-                    </motion.div>
-
-                    {/* Inside Left Page (Back of Front Cover) */}
-                    <motion.div
-                        animate={{ rotateY: isOpen ? -160 : 0 }}
-                        transition={{ duration: 0.8, type: "spring", stiffness: 50 }}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            transformOrigin: 'left center',
-                            transformStyle: 'preserve-3d',
-                            zIndex: 10, // Same logic group as front cover
-                            background: '#fef3c7',
-                            borderRadius: '8px 16px 16px 8px',
-                            backfaceVisibility: 'visible', // Visible when rotated
-                        }}
-                    >
-                        {/* This content shows when flipped (rotateY is -160deg) */}
-                        <div style={{
-                            width: '100%',
-                            height: '100%',
-                            transform: 'rotateY(180deg)', // Pre-flip the content so it's right way up when book is open
-                            overflow: 'hidden',
-                            borderRadius: '16px 8px 8px 16px'
-                        }}>
-                            <img
-                                src="/assets/memories-inside.png"
-                                alt="Memories Inside Left"
-                                style={{
-                                    width: '200%',
-                                    maxWidth: 'none',
-                                    height: '100%',
-                                    objectFit: 'cover',
-                                    transform: 'translateX(-50%)' // Show LEFT half
-                                }}
-                            />
-                        </div>
-                    </motion.div>
-
+                        right: 0,
+                        bottom: 0,
+                        background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(157, 0, 255, 0.05) 100%)',
+                        pointerEvents: 'none'
+                    }}></div>
                 </div>
-
-                <p style={{ marginTop: 40, fontFamily: 'monospace', opacity: 0.6 }}>
-                    &lt; Hover to unlock memories /&gt;
-                </p>
-
+                {/* Inner Pages */}
+                {[...Array(12)].map((_, index) => (
+                    <div
+                        key={index}
+                        className="h-full w-full"
+                        style={{
+                            backgroundColor: 'var(--bg-glass)',
+                            background: 'var(--bg-glass)',
+                            border: '1px solid var(--border-subtle)',
+                            borderRadius: '12px',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        <div className="w-full h-full flex flex-col justify-center items-center z-10 p-2" style={{ height: '100%', width: '100%' }}>
+                            <Suspense
+                                fallback={
+                                    <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: 'var(--bg-glass)' }}>
+                                        <span style={{ color: 'var(--text-muted)' }}>Loading...</span>
+                                    </div>
+                                }
+                            >
+                                <img
+                                    src={images[index]}
+                                    alt={`page ${index + 1}`}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        display: 'block',
+                                        borderRadius: '12px'
+                                    }}
+                                    onError={(e) => {
+                                        e.target.src = `https://picsum.photos/800/1000?random=${index + 20}`;
+                                    }}
+                                />
+                            </Suspense>
+                        </div>
+                    </div>
+                ))}
+                    </HTMLFlipBook>
+                </div>
             </div>
         </section>
     );
-}
+};
+
+export default Flipbook;

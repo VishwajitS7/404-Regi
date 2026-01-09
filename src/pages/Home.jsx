@@ -28,11 +28,11 @@ export default function Home() {
 
         <h1 className="hero-title" style={{ marginBottom: '24px', lineHeight: 1.1 }}>
           <span style={{
-            background: 'linear-gradient(90deg, #ffc09f 0%, var(--accent-secondary) 100%)',
+            background: 'linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-secondary) 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>Welcome to</span> <br />
-          <span className="text-gradient-primary">Oyster Kode Club</span>
+          <span className="text-gradient-primary">CODE - 404</span>
         </h1>
 
         <div className="lead" style={{ fontSize: '1.25rem', marginBottom: '32px', maxWidth: '600px', lineHeight: '1.6' }}>

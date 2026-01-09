@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import { toast } from "sonner";
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
+import Select from "../components/ui/Select";
 
 /* -------------------- Validation Schema -------------------- */
 const registrationSchema = z.object({
@@ -15,17 +16,51 @@ const registrationSchema = z.object({
   phone: z.string().length(10, "Phone number must be exactly 10 digits"),
   department: z.string().min(1, "Please select a department"),
   year: z.string().min(1, "Please select a year"),
+  eventName: z.string().min(1, "Please select an event"),
 });
 
 export default function Register() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
     resolver: zodResolver(registrationSchema),
   });
+
+  const departmentOptions = [
+    { value: "", label: "Select Dept" },
+    { value: "CSE", label: "Computer Science Engineering (CSE)" },
+    { value: "CSIT", label: "Computer Science and Information Technology (CSIT)" },
+    { value: "MECH", label: "Mechanical Engineering (MECH)" },
+    { value: "METR", label: "Mechatronics (METR)" },
+    { value: "ENTC", label: "Electronics and Telecommunication Engineering (ENTC)" },
+    { value: "CIVIL", label: "Civil Engineering (CIVIL)" },
+    { value: "AIML", label: "Artificial Intelligence and Machine Learning (AIML)" },
+    { value: "ROBOTICS", label: "Robotics (ROBOTICS)" },
+    { value: "BSC", label: "Bachelor of Science (BSC)" },
+    { value: "BCS", label: "Bachelor of Computer Science (BCS)" },
+    { value: "BCA", label: "Bachelor of Computer Applications (BCA)" },
+    { value: "MCA", label: "Master of Computer Applications (MCA)" },
+    { value: "Other", label: "Other" },
+  ];
+
+  const yearOptions = [
+    { value: "", label: "Select Year" },
+    { value: "FY", label: "First Year" },
+    { value: "SY", label: "Second Year" },
+    { value: "TY", label: "Third Year" },
+    { value: "Final", label: "Final Year" },
+  ];
+
+  const eventOptions = [
+    { value: "", label: "Select Event" },
+    { value: "CODING", label: "CODING" },
+    { value: "CODE-DUET", label: "CODE-DUET" },
+    { value: "GROUP DISCUSSION", label: "GROUP DISCUSSION" },
+  ];
 
   /* -------------------- Submit Handler -------------------- */
   async function onSubmit(data) {
@@ -58,7 +93,7 @@ export default function Register() {
         textAlign: 'center'
       }}>
         <h2 className="text-gradient-primary" style={{ marginBottom: 12, fontSize: '2rem', textTransform: 'uppercase', letterSpacing: '-1px' }}>
-          Joi&#x3396; The Squad
+          REGISTER HERE
         </h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '80%', margin: '0 auto' }}>
           Unlock exclusive workshops, mentorships, and hackathons.
@@ -107,29 +142,65 @@ export default function Register() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 20 }}>
-              <div className="input-group">
-                <label htmlFor="department" className="input-label">Department</label>
-                <select id="department" {...register("department")} className="input-field">
-                  <option value="">Select Dept</option>
-                  <option value="CSE">CSE</option>
-                  <option value="IT">IT</option>
-                  <option value="ENTC">EnTC</option>
-                  <option value="MECH">Mech</option>
-                </select>
-                {errors.department && <span className="error-msg">{errors.department.message}</span>}
+              <div>
+                <label htmlFor="department" className="input-label" style={{ display: 'block', marginBottom: '0.5rem' }}>Department</label>
+                <Controller
+                  name="department"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="department"
+                      name="department"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={departmentOptions}
+                      placeholder="Select Dept"
+                      error={errors.department}
+                    />
+                  )}
+                />
               </div>
 
-              <div className="input-group">
-                <label htmlFor="year" className="input-label">Year of Study</label>
-                <select id="year" {...register("year")} className="input-field">
-                  <option value="">Select Year</option>
-                  <option value="FY">First Year</option>
-                  <option value="SY">Second Year</option>
-                  <option value="TY">Third Year</option>
-                  <option value="Final">Final Year</option>
-                </select>
-                {errors.year && <span className="error-msg">{errors.year.message}</span>}
+              <div>
+                <label htmlFor="year" className="input-label" style={{ display: 'block', marginBottom: '0.5rem' }}>Year of Study</label>
+                <Controller
+                  name="year"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="year"
+                      name="year"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={yearOptions}
+                      placeholder="Select Year"
+                      error={errors.year}
+                    />
+                  )}
+                />
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="eventName" className="input-label" style={{ display: 'block', marginBottom: '0.5rem' }}>Event Name</label>
+              <Controller
+                name="eventName"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="eventName"
+                    name="eventName"
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    options={eventOptions}
+                    placeholder="Select Event"
+                    error={errors.eventName}
+                  />
+                )}
+              />
             </div>
 
             <div className="input-group">
