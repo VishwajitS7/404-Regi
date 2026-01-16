@@ -72,7 +72,7 @@ function App() {
 
       <main>
         {/* Hero Section */}
-        <section id="home" className="section" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+        <section id="home" className="section hero-section" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
           {/* Background Elements */}
           <div className="hero-bg-element" style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '100%', pointerEvents: 'none', zIndex: 0 }}>
             <div style={{
