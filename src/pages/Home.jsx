@@ -61,7 +61,7 @@ export default function Home() {
           })()}
         </div>
 
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+        <div className="hero-buttons" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
           <Button onClick={() => scrollTo('register')}>
             Register Now
           </Button>
@@ -70,7 +70,7 @@ export default function Home() {
           </Button>
         </div>
 
-        <div style={{ marginTop: '48px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="hero-stats" style={{ marginTop: '48px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex' }}>
             {[1, 2, 3, 4].map(i => (
               <div key={i} style={{

@@ -121,7 +121,7 @@ export default function Register({ onRegistrationSuccess }) {
   return (
     <Card className="glass-panel" style={{ padding: 0, overflow: 'hidden', border: '1px solid rgba(255, 158, 100, 0.2)' }}>
       {/* Header - Vibrant Brand Gradient */}
-      <div style={{
+      <div className="register-header" style={{
         background: 'linear-gradient(180deg, rgba(255, 77, 109, 0.08), transparent)',
         padding: '32px 32px 20px',
         textAlign: 'center'
@@ -134,9 +134,9 @@ export default function Register({ onRegistrationSuccess }) {
         </p>
       </div>
 
-      <div style={{ padding: '0 32px 32px' }}>
+      <div className="register-form-container" style={{ padding: '0 32px 32px' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <div className="register-form-fields" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
             <div className="input-group">
               <label htmlFor="name" className="input-label">Full Name</label>
@@ -162,20 +162,22 @@ export default function Register({ onRegistrationSuccess }) {
 
             <div className="input-group">
               <label htmlFor="phone" className="input-label">Phone Number</label>
-              <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 14, top: 12, color: 'var(--text-muted)', fontSize: '0.95rem' }}>🇮🇳 +91</span>
+              <div className="phone-input-wrapper" style={{ position: 'relative' }}>
+                <span className="phone-prefix" style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.95rem', pointerEvents: 'none', zIndex: 1 }}>🇮🇳 +91</span>
                 <input
                   id="phone"
                   {...register("phone")}
                   className="input-field"
                   style={{ paddingLeft: 64 }}
                   placeholder="98765 43210"
+                  type="tel"
+                  inputMode="numeric"
                 />
               </div>
               {errors.phone && <span className="error-msg">{errors.phone.message}</span>}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 20 }}>
+            <div className="form-row-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 20 }}>
               <div>
                 <label htmlFor="department" className="input-label" style={{ display: 'block', marginBottom: '0.5rem' }}>Department</label>
                 <Controller
@@ -273,11 +275,12 @@ export default function Register({ onRegistrationSuccess }) {
 
           </div>
 
-          <div style={{ marginTop: 36, display: 'flex', gap: 16 }}>
+          <div className="form-actions-mobile" style={{ marginTop: 36, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             <Button
               type="submit"
               disabled={isSubmitting}
-              style={{ flex: 2, display: 'flex', justifyContent: 'center', gap: 8, fontSize: '1.1rem' }}
+              className="submit-button-mobile"
+              style={{ flex: 2, display: 'flex', justifyContent: 'center', gap: 8, fontSize: '1.1rem', minWidth: '200px' }}
             >
               {isSubmitting ? "Processing..." : (
                 <>
@@ -289,7 +292,7 @@ export default function Register({ onRegistrationSuccess }) {
             <button
               type="button"
               onClick={() => reset()}
-              className="hover:text-white transition-all"
+              className="reset-button-mobile hover:text-white transition-all"
               style={{
                 background: 'transparent',
                 flex: 1,
@@ -297,7 +300,10 @@ export default function Register({ onRegistrationSuccess }) {
                 borderRadius: 12,
                 fontWeight: 600,
                 cursor: 'pointer',
-                color: 'var(--text-muted)'
+                color: 'var(--text-muted)',
+                minWidth: '120px',
+                minHeight: '44px',
+                transition: 'all 0.2s ease'
               }}
               onMouseEnter={(e) => e.target.style.borderColor = 'var(--text-muted)'}
               onMouseLeave={(e) => e.target.style.borderColor = 'var(--border-subtle)'}
