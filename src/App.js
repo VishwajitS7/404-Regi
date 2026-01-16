@@ -11,6 +11,7 @@ import Memories from "./components/Memories";
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -178,14 +179,14 @@ function Event() {
               </motion.div>
 
               <div id="register-form-container">
-                <Register />
+                <Register onRegistrationSuccess={() => setRegistrationSuccess(true)} />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Success Section Placeholder */}
-        <Success />
+        {/* Success Section - Only shown after registration is complete */}
+        {registrationSuccess && <Success />}
 
         {/* Footer */}
         <footer style={{ borderTop: '1px solid var(--border-subtle)', padding: '60px 0', marginTop: 100 }}>

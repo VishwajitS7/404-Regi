@@ -154,7 +154,7 @@ const Flipbook = () => {
                 {/* Cover Page */}
                 <div className="w-full h-full" style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden' }}>
                     <img
-                        src="/img/Cover.jpg"
+                        src="/img/Cover.png"
                         alt="cover"
                         className="w-full h-full object-cover"
                         style={{ 

@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
+import { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
@@ -17,18 +18,40 @@ const registrationSchema = z.object({
   department: z.string().min(1, "Please select a department"),
   year: z.string().min(1, "Please select a year"),
   eventName: z.string().min(1, "Please select an event"),
+  category: z.string().optional(),
+}).refine((data) => {
+  // Category is required only if eventName is CODING
+  if (data.eventName === "CODING") {
+    return data.category && data.category.length > 0;
+  }
+  return true;
+}, {
+  message: "Please select a category",
+  path: ["category"],
 });
 
-export default function Register() {
+export default function Register({ onRegistrationSuccess }) {
   const {
     register,
     handleSubmit,
     control,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
     reset,
   } = useForm({
     resolver: zodResolver(registrationSchema),
   });
+
+  // Watch eventName to conditionally show category field
+  const selectedEvent = watch("eventName");
+
+  // Clear category field when event changes away from CODING
+  useEffect(() => {
+    if (selectedEvent !== "CODING") {
+      setValue("category", "");
+    }
+  }, [selectedEvent, setValue]);
 
   const departmentOptions = [
     { value: "", label: "Select Dept" },
@@ -62,6 +85,12 @@ export default function Register() {
     { value: "GROUP DISCUSSION", label: "GROUP DISCUSSION" },
   ];
 
+  const categoryOptions = [
+    { value: "", label: "Select Category" },
+    { value: "NOVICE", label: "NOVICE" },
+    { value: "EXPERT", label: "EXPERT" },
+  ];
+
   /* -------------------- Submit Handler -------------------- */
   async function onSubmit(data) {
     try {
@@ -74,6 +103,11 @@ export default function Register() {
       toast.success("Registration Successful!", {
         description: "We'll see you at the event. Check your email for details."
       });
+
+      // Notify parent component about successful registration
+      if (onRegistrationSuccess) {
+        onRegistrationSuccess();
+      }
 
     } catch (error) {
       console.error("Firestore Error:", error);
@@ -202,6 +236,29 @@ export default function Register() {
                 )}
               />
             </div>
+
+            {/* Category field - only shown when CODING event is selected */}
+            {selectedEvent === "CODING" && (
+              <div>
+                <label htmlFor="category" className="input-label" style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
+                <Controller
+                  name="category"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      id="category"
+                      name="category"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      options={categoryOptions}
+                      placeholder="Select Category"
+                      error={errors.category}
+                    />
+                  )}
+                />
+              </div>
+            )}
 
             <div className="input-group">
               <label htmlFor="prn" className="input-label">PRN / ID Number</label>
